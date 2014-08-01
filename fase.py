@@ -23,30 +23,33 @@
 #
 # ######################################################################
 
-import sys
+import sys, os
 import argparse
 from PyQt4 import QtGui, QtCore, QtWebKit
 
-jsFillLoginForm = """ 
-    document.getElementById('email').value='{username}';
-    document.getElementById('pass').value='{password}';
-    """
-jsClickLoginButton = """
-    document.getElementById('u_0_l').click(); void(0);
-    """
+BASE_PATH = os.path.dirname(os.path.realpath(__file__))
+
+from js.login import *
+from js.ads import *
 
 
 class Fase(QtGui.QMainWindow):
 
     def _loadFinished(self):
+        # ----- Fill login form
         if self.args.username and self.args.password:
             self.web.page().mainFrame().evaluateJavaScript(
                 jsFillLoginForm.format(username = self.args.username,
                                        password = self.args.password)
                 )
+            # ----- Autologin
             if self.args.auto_login:
                 self.web.page().mainFrame().evaluateJavaScript(
                     jsClickLoginButton)
+        # ----- Remove Ads
+        if self.args.no_ads:
+            self.web.page().mainFrame().evaluateJavaScript(
+                jsRemoveAds)
 
     def __init__(self, args):
         self.args = args
@@ -56,6 +59,7 @@ class Fase(QtGui.QMainWindow):
         self.resize(800, 600)
         self.setWindowState(QtCore.Qt.WindowMaximized)
         self.setWindowTitle('FASE - Facebook Separated Environment')
+        self.setWindowIcon(QtGui.QIcon('%s/images/fase.png' % (BASE_PATH)))
         # ----- Content creation
         main_grid = QtGui.QGridLayout()
         self.main_grid = main_grid
@@ -77,6 +81,9 @@ if __name__ == "__main__":
     parser.add_argument('-l', '--auto-login', dest='auto_login',
                         action='store_true',
                         help='Autologin in Facebook')
+    parser.add_argument('-a', '--no-ads', dest='no_ads',
+                        action='store_true',
+                        help='Hide Ads from Facebook pages')
     args = parser.parse_args()
 
     # ----- Init app
