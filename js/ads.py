@@ -25,7 +25,13 @@
 
 
 # ----- Hide ads
+
 jsRemoveAds = """
-    ad = document.getElementById("pagelet_ego_pane");
-    ad.parentNode.removeChild(ad);
+    var ads = ["pagelet_ego_pane", "pagelet_side_ads"];
+    for (var i in ads) {
+        ad = document.getElementById(ads[i]);
+        if (ad) {
+            ad.parentNode.removeChild(ad);
+        }
+    }
 """
