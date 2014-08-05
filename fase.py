@@ -25,6 +25,7 @@
 
 import sys, os
 import argparse
+import webbrowser
 from PyQt4 import QtGui, QtCore, QtWebKit
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -51,6 +52,20 @@ class Fase(QtGui.QMainWindow):
             self.web.page().mainFrame().evaluateJavaScript(
                 jsRemoveAds)
 
+    def _link_clicked(self, qurl):
+        url = qurl.toString()
+        import re
+        pat = re.compile(
+            '(https|http)://l.facebook.com/l.php[?]u=((.)+)&h=(.)+')
+        risultato = pat.match(url)
+        if risultato:
+            url = risultato.group(2)
+        if webbrowser.open(url):
+            print 'Open external URL',
+        else:
+            print 'Impossible to open URL',
+        print url
+
     def __init__(self, args):
         self.args = args
         # ----- Window
@@ -65,8 +80,13 @@ class Fase(QtGui.QMainWindow):
         self.main_grid = main_grid
         # ----- Webkit
         self.web = QtWebKit.QWebView()
-        self.web.setUrl(QtCore.QUrl('http://www.facebook.com'))
+        self.web.setUrl(QtCore.QUrl('https://www.facebook.com'))
+        # ----- Manage Javascript scripts
         self.web.loadFinished.connect(self._loadFinished)
+        # ----- Manage links
+        self.web.page().setLinkDelegationPolicy(
+            QtWebKit.QWebPage.DelegateAllLinks)
+        self.web.linkClicked.connect(self._link_clicked)
         self.setCentralWidget(self.web)
 
 
