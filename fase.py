@@ -57,14 +57,19 @@ class Fase(QtGui.QMainWindow):
         import re
         pat = re.compile(
             '(https|http)://l.facebook.com/l.php[?]u=((.)+)&h=(.)+')
-        risultato = pat.match(url)
-        if risultato:
-            url = risultato.group(2)
-        if webbrowser.open(url):
-            print 'Open external URL',
-        else:
-            print 'Impossible to open URL',
-        print url
+        res = pat.match(url)
+        if res:
+            url = res.group(2)
+        # ----- Check if url is an internal facebook link
+        re.compile('(https|http)://www.facebook.com/.+')
+        res = pat.match(url)
+        # ----- Site is external: Open Link in default browser
+        if not res:
+            if webbrowser.open(url):
+                print 'Open external URL',
+            else:
+                print 'Impossible to open URL',
+            print url
 
     def __init__(self, args):
         self.args = args

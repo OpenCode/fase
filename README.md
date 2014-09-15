@@ -11,7 +11,7 @@ http://newsroom.fb.com/news/2014/06/making-ads-better-and-giving-people-more-con
 FAQ
 ==
 
-Why FaSE open links in a separated browser?
+Why FaSE open external links in a separated browser?
 ============
 
 When you click on a link in a page on Facebook, the site track you click with an unique ID. So Facebook can see what link you visit and what you like. FaSE opens the links on your standard browser to keep your visited pages away from Zuckerberg's eyes :)
