@@ -26,12 +26,24 @@
 
 # ----- Hide ads
 
-jsRemoveAds = """
+jsRemoveAdsById = """
     var ads = ["pagelet_ego_pane", "pagelet_side_ads"];
     for (var i in ads) {
         ad = document.getElementById(ads[i]);
         if (ad) {
             ad.parentNode.removeChild(ad);
+        }
+    }
+"""
+
+jsRemoveAdsByClass = """
+    var class_names = ["ego_section"];
+    for (var name in class_names) {
+        var ads = document.getElementsByClassName(class_names[name]);
+        if (ads) {
+            for (var ad = 0, length = ads.length; ad < length; ad++) {
+                ads[ad].parentNode.removeChild(ads[ad]);
+            }
         }
     }
 """

@@ -37,6 +37,12 @@ from js.ads import *
 class Fase(QtGui.QMainWindow):
 
     def _loadFinished(self):
+        # ----- Remove Ads
+        if self.args.no_ads:
+            self.web.page().mainFrame().evaluateJavaScript(
+                jsRemoveAdsById)
+            self.web.page().mainFrame().evaluateJavaScript(
+                jsRemoveAdsByClass)
         # ----- Fill login form
         if self.args.username and self.args.password:
             self.web.page().mainFrame().evaluateJavaScript(
@@ -47,10 +53,6 @@ class Fase(QtGui.QMainWindow):
             if self.args.auto_login:
                 self.web.page().mainFrame().evaluateJavaScript(
                     jsClickLoginButton)
-        # ----- Remove Ads
-        if self.args.no_ads:
-            self.web.page().mainFrame().evaluateJavaScript(
-                jsRemoveAds)
 
     def _link_clicked(self, qurl):
         url = qurl.toString()
