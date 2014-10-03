@@ -41,8 +41,8 @@ class Fase(QtGui.QMainWindow):
         if self.args.no_ads:
             self.web.page().mainFrame().evaluateJavaScript(
                 jsRemoveAdsById)
-            self.web.page().mainFrame().evaluateJavaScript(
-                jsRemoveAdsByClass)
+            #self.web.page().mainFrame().evaluateJavaScript(
+            #    jsRemoveAdsByClass)
         # ----- Fill login form
         if self.args.username and self.args.password:
             self.web.page().mainFrame().evaluateJavaScript(
@@ -63,7 +63,7 @@ class Fase(QtGui.QMainWindow):
         if res:
             url = res.group(2)
         # ----- Check if url is an internal facebook link
-        re.compile('(https|http)://www.facebook.com/.+')
+        pat = re.compile('(https|http)://www.facebook.com/.+')
         res = pat.match(url)
         # ----- Site is external: Open Link in default browser
         if not res:
@@ -72,6 +72,7 @@ class Fase(QtGui.QMainWindow):
             else:
                 print 'Impossible to open URL',
             print url
+        self.web.setUrl(QtCore.QUrl(url))
 
     def __init__(self, args):
         self.args = args
