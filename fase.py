@@ -58,10 +58,10 @@ class Fase(QtGui.QMainWindow):
         url = qurl.toString()
         import re
         pat = re.compile(
-            '(https|http)://l.facebook.com/l.php[?]u=((.)+)&h=(.)+')
+            '(https|http)://(l|www).facebook.com/l.php[?]u=((.)+)&h=(.)+')
         res = pat.match(url)
         if res:
-            url = res.group(2)
+            url = res.group(3)
         # ----- Check if url is an internal facebook link
         pat = re.compile('(https|http)://www.facebook.com/.+')
         res = pat.match(url)
@@ -72,7 +72,8 @@ class Fase(QtGui.QMainWindow):
             else:
                 print 'Impossible to open URL',
             print url
-        self.web.setUrl(QtCore.QUrl(url))
+        else:
+            self.web.setUrl(QtCore.QUrl(url))
 
     def __init__(self, args):
         self.args = args
