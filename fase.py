@@ -35,11 +35,14 @@ from utils.regex import FB_EXTERNAL_LINK, FB_INTERNAL_LINK
 
 from js.login import jsFillLoginForm, jsClickLoginButton
 from js.ads import jsRemoveAdsById
+from js.other import jsChangeLoginPage
 
 
 class Fase(QtGui.QMainWindow):
 
     def _loadFinished(self):
+        # ----- Apply some change
+        self.web.page().mainFrame().evaluateJavaScript(jsChangeLoginPage)
         # ----- Remove Ads
         if self.args.no_ads:
             self.web.page().mainFrame().evaluateJavaScript(
@@ -94,7 +97,6 @@ class Fase(QtGui.QMainWindow):
         #       "Please Flash, kill yourself!!!!!!!!!!!!"
         QtWebKit.QWebSettings.globalSettings().setAttribute(
             QtWebKit.QWebSettings.PluginsEnabled, True)
-        # /TEST
         # ----- Webkit
         self.web = QtWebKit.QWebView()
         self.web.setUrl(QtCore.QUrl('https://www.facebook.com'))

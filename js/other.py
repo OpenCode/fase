@@ -23,6 +23,13 @@
 #
 # ######################################################################
 
-import login
-import ads
-import other
+
+# ----- Change login page
+jsChangeLoginPage = """ 
+    var div_parents = document.getElementsByClassName('_5iyy');
+    var e = document.createElement('div');
+    e.setAttribute('class', '_5iyx')
+    e.innerHTML = 'You Are using <a href="https://github.com/OpenCode/fase">FASE</a> and this is great!';
+    div_parents[0].insertBefore(e);
+    """
+
