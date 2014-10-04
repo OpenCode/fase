@@ -87,6 +87,11 @@ class Fase(QtGui.QMainWindow):
         # ----- Content creation
         main_grid = QtGui.QGridLayout()
         self.main_grid = main_grid
+        # ----- Enabled plugins (Flash Videos)
+        #       "Please Flash, kill yourself!!!!!!!!!!!!"
+        QtWebKit.QWebSettings.globalSettings().setAttribute(
+            QtWebKit.QWebSettings.PluginsEnabled, True)
+        # /TEST
         # ----- Webkit
         self.web = QtWebKit.QWebView()
         self.web.setUrl(QtCore.QUrl('https://www.facebook.com'))
