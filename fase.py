@@ -30,6 +30,8 @@ from PyQt4 import QtGui, QtCore, QtWebKit
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 
+from utils.regex import *
+
 from js.login import *
 from js.ads import *
 
@@ -57,13 +59,12 @@ class Fase(QtGui.QMainWindow):
     def _link_clicked(self, qurl):
         url = qurl.toString()
         import re
-        pat = re.compile(
-            '(https|http)://(l|www).facebook.com/l.php[?]u=((.)+)&h=(.)+')
+        pat = re.compile(FB_EXTERNAL_LINK)
         res = pat.match(url)
         if res:
             url = res.group(3)
         # ----- Check if url is an internal facebook link
-        pat = re.compile('(https|http)://www.facebook.com/.+')
+        pat = re.compile(FB_INTERNAL_LINK)
         res = pat.match(url)
         # ----- Site is external: Open Link in default browser
         if not res:
