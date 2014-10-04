@@ -23,17 +23,18 @@
 #
 # ######################################################################
 
-import sys, os
+import sys
+import os
 import argparse
 import webbrowser
 from PyQt4 import QtGui, QtCore, QtWebKit
 
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 
-from utils.regex import *
+from utils.regex import FB_EXTERNAL_LINK, FB_INTERNAL_LINK
 
-from js.login import *
-from js.ads import *
+from js.login import jsFillLoginForm, jsClickLoginButton
+from js.ads import jsRemoveAdsById
 
 
 class Fase(QtGui.QMainWindow):
@@ -43,13 +44,14 @@ class Fase(QtGui.QMainWindow):
         if self.args.no_ads:
             self.web.page().mainFrame().evaluateJavaScript(
                 jsRemoveAdsById)
+            # ----- TODO: to study because this code is so slow
             #self.web.page().mainFrame().evaluateJavaScript(
             #    jsRemoveAdsByClass)
         # ----- Fill login form
         if self.args.username and self.args.password:
             self.web.page().mainFrame().evaluateJavaScript(
-                jsFillLoginForm.format(username = self.args.username,
-                                       password = self.args.password)
+                jsFillLoginForm.format(username=self.args.username,
+                                       password=self.args.password)
                 )
             # ----- Autologin
             if self.args.auto_login:
