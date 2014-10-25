@@ -108,7 +108,11 @@ class Fase(QtGui.QMainWindow):
         # ----- Enable cache
         self.network_manager = QtNetwork.QNetworkAccessManager()
         self.disk_cache = QtNetwork.QNetworkDiskCache()
-        self.disk_cache.setCacheDirectory('%s/cache' % (BASE_PATH))
+        if self.args.cache_path:
+            cache_directory = self.args.cache_path
+        else:
+            cache_directory = '%s/cache' % (BASE_PATH)
+        self.disk_cache.setCacheDirectory(cache_directory)
         self.network_manager.setCache(self.disk_cache)
         # ----- Webkit
         self.web = QtWebKit.QWebView()
@@ -141,6 +145,8 @@ if __name__ == "__main__":
     parser.add_argument('-a', '--no-ads', dest='no_ads',
                         action='store_true',
                         help='Hide Ads from Facebook pages')
+    parser.add_argument('-g', '--cache-path', dest='cache_path',
+                        help='Set cache path')
     args = parser.parse_args()
 
     # ----- Init app
