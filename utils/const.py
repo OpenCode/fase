@@ -23,5 +23,5 @@
 #
 # ######################################################################
 
-import regex
-import const
+
+THE_URL = 'https://www.facebook.com'

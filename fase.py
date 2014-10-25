@@ -23,19 +23,27 @@
 #
 # ######################################################################
 
+# ------
+# IMPORT
+# ------
 import sys
 import os
 import argparse
 import webbrowser
-from PyQt4 import QtGui, QtCore, QtWebKit
 
-BASE_PATH = os.path.dirname(os.path.realpath(__file__))
+from PyQt4 import QtGui, QtCore, QtWebKit, QtNetwork
 
+from utils.const import THE_URL
 from utils.regex import FB_EXTERNAL_LINK, FB_INTERNAL_LINK
 
 from js.login import jsFillLoginForm, jsClickLoginButton
 from js.ads import jsRemoveAdsById
 from js.other import jsChangeLoginPage
+
+# --------
+# CONSTANT
+# --------
+BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 
 
 class Fase(QtGui.QMainWindow):
@@ -47,7 +55,7 @@ class Fase(QtGui.QMainWindow):
         if self.args.no_ads:
             self.web.page().mainFrame().evaluateJavaScript(
                 jsRemoveAdsById)
-            # ----- TODO: to study because this code is so slow
+            # ----- TODO: To study. Why this code is so slow?
             #self.web.page().mainFrame().evaluateJavaScript(
             #    jsRemoveAdsByClass)
         # ----- Fill login form
@@ -97,9 +105,19 @@ class Fase(QtGui.QMainWindow):
         #       "Please Flash, kill yourself!!!!!!!!!!!!"
         QtWebKit.QWebSettings.globalSettings().setAttribute(
             QtWebKit.QWebSettings.PluginsEnabled, True)
+        # ----- Enable cache
+        self.network_manager = QtNetwork.QNetworkAccessManager()
+        self.disk_cache = QtNetwork.QNetworkDiskCache()
+        self.disk_cache.setCacheDirectory('%s/cache' % (BASE_PATH))
+        self.network_manager.setCache(self.disk_cache)
         # ----- Webkit
         self.web = QtWebKit.QWebView()
-        self.web.setUrl(QtCore.QUrl('https://www.facebook.com'))
+        self.webpage = QtWebKit.QWebPage()
+        # ----- Cache management
+        self.web.setPage(self.webpage)
+        self.webpage.setNetworkAccessManager(self.network_manager)
+        # ----- Set URL
+        self.web.setUrl(QtCore.QUrl(THE_URL))
         # ----- Manage Javascript scripts
         self.web.loadFinished.connect(self._loadFinished)
         # ----- Manage links
