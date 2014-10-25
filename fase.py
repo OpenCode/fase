@@ -91,16 +91,6 @@ class Fase(QtGui.QMainWindow):
 
     def __init__(self, args):
         self.args = args
-        # ----- Window
-        QtGui.QMainWindow.__init__(self)
-        self.setFocusPolicy(QtCore.Qt.StrongFocus)
-        self.resize(800, 600)
-        self.setWindowState(QtCore.Qt.WindowMaximized)
-        self.setWindowTitle('FASE - Facebook Separated Environment')
-        self.setWindowIcon(QtGui.QIcon('%s/images/fase.png' % (BASE_PATH)))
-        # ----- Content creation
-        main_grid = QtGui.QGridLayout()
-        self.main_grid = main_grid
         # ----- Enabled plugins (Flash Videos)
         #       "Please Flash, kill yourself!!!!!!!!!!!!"
         QtWebKit.QWebSettings.globalSettings().setAttribute(
@@ -128,6 +118,29 @@ class Fase(QtGui.QMainWindow):
         self.web.page().setLinkDelegationPolicy(
             QtWebKit.QWebPage.DelegateAllLinks)
         self.web.linkClicked.connect(self._link_clicked)
+        # -----------
+        # Create view
+        # -----------
+        # ----- Window
+        QtGui.QMainWindow.__init__(self)
+        self.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.resize(800, 600)
+        self.setWindowState(QtCore.Qt.WindowMaximized)
+        self.setWindowTitle('FASE - Facebook Separated Environment')
+        self.setWindowIcon(QtGui.QIcon('%s/images/fase.png' % (BASE_PATH)))
+        # ----- Toolbar
+        toolbar = self.addToolBar('MainToolBar')
+        self.addToolBar(QtCore.Qt.RightToolBarArea, toolbar)
+        # ----- Button Quit
+        button_quit = QtGui.QAction(
+            QtGui.QIcon('%s/images/icons/close.png' % (BASE_PATH)),
+            "Quit", self)
+        button_quit.setShortcut("Ctrl+Q")
+        button_quit.setStatusTip("Exit from application")
+        self.connect(button_quit, QtCore.SIGNAL('triggered()'),
+                     QtCore.SLOT('close()'))
+        toolbar.addAction(button_quit)
+        # ----- Main web view
         self.setCentralWidget(self.web)
 
 
