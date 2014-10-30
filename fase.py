@@ -166,7 +166,7 @@ if __name__ == "__main__":
                         help='Set cache path')
     parser.add_argument(
         '-o', '--order', dest='order', choices=['c', 'p'], default='p',
-        help='Set posts rrder as [c]hronological or [p]rincipal')
+        help='Set posts order as [c]hronological or [p]rincipal')
     args = parser.parse_args()
 
     # ----- Init app
