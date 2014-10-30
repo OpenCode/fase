@@ -23,9 +23,10 @@
 #
 # ######################################################################
 
-# ------
-# IMPORT
-# ------
+
+# -------
+# IMPORTS
+# -------
 import sys
 import os
 import argparse
@@ -35,6 +36,7 @@ from PyQt4 import QtGui, QtCore, QtWebKit, QtNetwork
 
 from utils.const import THE_URL
 from utils.regex import FB_EXTERNAL_LINK, FB_INTERNAL_LINK
+from utils.logger import info_log, error_log, system_log
 
 from js.login import jsFillLoginForm, jsClickLoginButton
 from js.ads import jsRemoveAdsById
@@ -82,10 +84,9 @@ class Fase(QtGui.QMainWindow):
         # ----- Site is external: Open Link in default browser
         if not res:
             if webbrowser.open(url):
-                print 'Open external URL',
+                info_log('Open external URL %s' % (url))
             else:
-                print 'Impossible to open URL',
-            print url
+                error_log('Impossible to open URL %s' % (url))
         else:
             self.web.setUrl(QtCore.QUrl(url))
 
@@ -102,6 +103,7 @@ class Fase(QtGui.QMainWindow):
             cache_directory = self.args.cache_path
         else:
             cache_directory = '%s/cache' % (BASE_PATH)
+        system_log('Setting cache in %s' % (cache_directory))
         self.disk_cache.setCacheDirectory(cache_directory)
         self.network_manager.setCache(self.disk_cache)
         # ----- Webkit
@@ -111,7 +113,9 @@ class Fase(QtGui.QMainWindow):
         self.web.setPage(self.webpage)
         self.webpage.setNetworkAccessManager(self.network_manager)
         # ----- Set URL
-        self.web.setUrl(QtCore.QUrl(THE_URL))
+        order = 'chr' if self.args.order == 'c' else 'nor'
+        self.web.setUrl(QtCore.QUrl('%s/?sk=h_%s' % (THE_URL, order)))
+        system_log('Setting URL %s/?sk=h_%s' % (THE_URL, order))
         # ----- Manage Javascript scripts
         self.web.loadFinished.connect(self._loadFinished)
         # ----- Manage links
@@ -160,6 +164,9 @@ if __name__ == "__main__":
                         help='Hide Ads from Facebook pages')
     parser.add_argument('-g', '--cache-path', dest='cache_path',
                         help='Set cache path')
+    parser.add_argument(
+        '-o', '--order', dest='order', choices=['c', 'p'], default='p',
+        help='Set posts rrder as [c]hronological or [p]rincipal')
     args = parser.parse_args()
 
     # ----- Init app
