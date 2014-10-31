@@ -39,9 +39,9 @@ LOG_SYSTEM = 3
 
 LOG_FORMAT = {
     LOG_INFO: 'INFO',
-    LOG_WARNING: 'WARN',
-    LOG_ERROR: 'ERRR',
-    LOG_SYSTEM: 'SYST',
+    LOG_WARNING: '\033[01;33m%s\033[00m' % ('WARN'),
+    LOG_ERROR: '\033[01;31m%s\033[00m' % ('ERRR'),
+    LOG_SYSTEM: '\033[01;34m%s\033[00m' % ('SYST'),
     }
 
 

@@ -90,6 +90,9 @@ class Fase(QtGui.QMainWindow):
         else:
             self.web.setUrl(QtCore.QUrl(url))
 
+    def _go_to_home(self):
+        self.web.setUrl(QtCore.QUrl('%s/?sk=h_%s' % (THE_URL, self.order)))
+
     def __init__(self, args):
         self.args = args
         # ----- Enabled plugins (Flash Videos)
@@ -113,9 +116,9 @@ class Fase(QtGui.QMainWindow):
         self.web.setPage(self.webpage)
         self.webpage.setNetworkAccessManager(self.network_manager)
         # ----- Set URL
-        order = 'chr' if self.args.order == 'c' else 'nor'
-        self.web.setUrl(QtCore.QUrl('%s/?sk=h_%s' % (THE_URL, order)))
-        system_log('Setting URL %s/?sk=h_%s' % (THE_URL, order))
+        self.order = 'chr' if self.args.order == 'c' else 'nor'
+        self.web.setUrl(QtCore.QUrl('%s/?sk=h_%s' % (THE_URL, self.order)))
+        system_log('Setting URL %s/?sk=h_%s' % (THE_URL, self.order))
         # ----- Manage Javascript scripts
         self.web.loadFinished.connect(self._loadFinished)
         # ----- Manage links
@@ -135,6 +138,15 @@ class Fase(QtGui.QMainWindow):
         # ----- Toolbar
         toolbar = self.addToolBar('MainToolBar')
         self.addToolBar(QtCore.Qt.RightToolBarArea, toolbar)
+        # ----- Button Home
+        button_home = QtGui.QAction(
+            QtGui.QIcon('%s/images/icons/home.png' % (BASE_PATH)),
+            "Home", self)
+        button_home.setShortcut("Ctrl+H")
+        button_home.setStatusTip("Homepage")
+        self.connect(button_home, QtCore.SIGNAL('triggered()'),
+                     self._go_to_home)
+        toolbar.addAction(button_home)
         # ----- Button Quit
         button_quit = QtGui.QAction(
             QtGui.QIcon('%s/images/icons/close.png' % (BASE_PATH)),
