@@ -47,6 +47,12 @@ from js.other import jsChangeLoginPage
 # --------
 BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 
+# --------
+# DEV ZONE
+# --------
+#from PyQt4.QtCore import pyqtRemoveInputHook
+#from pdb import set_trace; pyqtRemoveInputHook(); set_trace()
+
 
 class Fase(QtGui.QMainWindow):
 
@@ -92,6 +98,9 @@ class Fase(QtGui.QMainWindow):
 
     def _go_to_home(self):
         self.web.setUrl(QtCore.QUrl('%s/?sk=h_%s' % (THE_URL, self.order)))
+
+    def _refresh_page(self):
+        self.web.setUrl(self.web.url())
 
     def __init__(self, args):
         self.args = args
@@ -147,6 +156,15 @@ class Fase(QtGui.QMainWindow):
         self.connect(button_home, QtCore.SIGNAL('triggered()'),
                      self._go_to_home)
         toolbar.addAction(button_home)
+        # ----- Button Refresh
+        button_refresh = QtGui.QAction(
+            QtGui.QIcon('%s/images/icons/refresh.png' % (BASE_PATH)),
+            "Refresh", self)
+        button_refresh.setShortcut("Ctrl+R")
+        button_refresh.setStatusTip("Refresh page")
+        self.connect(button_refresh, QtCore.SIGNAL('triggered()'),
+                     self._refresh_page)
+        toolbar.addAction(button_refresh)
         # ----- Button Quit
         button_quit = QtGui.QAction(
             QtGui.QIcon('%s/images/icons/close.png' % (BASE_PATH)),
